@@ -8,6 +8,8 @@ import (
 	"github.com/luthfi/pos/config"
 	"github.com/luthfi/pos/handler"
 	"github.com/luthfi/pos/middleware"
+	"github.com/luthfi/pos/repository"
+	"github.com/luthfi/pos/service"
 )
 
 func main() {
@@ -22,6 +24,17 @@ func main() {
 	api.Get("/me", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"user": c.Locals("username")})
 	})
+
+	prodRepo := repository.NewProductRepository()
+	prodSvc := service.NewProductService(prodRepo)
+	prodHdl := handler.NewProductHandler(prodSvc)
+
+	prod := app.Group("/api/produk", middleware.AuthMiddleware)
+	prod.Get("/", prodHdl.GetAll)
+	prod.Get("/search", prodHdl.Search)
+	prod.Post("/create", prodHdl.Create)
+	prod.Put("/update/:id", prodHdl.Update)
+	prod.Delete("/delete/:id", prodHdl.Delete)
 
 	log.Println("Server berjalan di :8080")
 	app.Listen(":8080")
