@@ -57,6 +57,18 @@ func main() {
 	mem.Put("/update/:id", memHdl.Update)
 	mem.Delete("/delete/:id", memHdl.Delete)
 
+	transRepo := repository.NewTransactionRepository()
+	transSvc := service.NewTransactionService(transRepo)
+	transHdl := handler.NewTransactionHandler(transSvc)
+
+	trans := app.Group("/api/transaksi", middleware.AuthMiddleware)
+
+	trans.Get("/", transHdl.GetAll)
+	trans.Get("/detail/:id", transHdl.GetByID)
+	trans.Post("/create", transHdl.Create)
+	trans.Put("/status/:id", transHdl.UpdateStatus)
+	trans.Delete("/delete/:id", transHdl.Delete)
+
 	log.Println("Server berjalan di :8080")
 	app.Listen(":8080")
 
