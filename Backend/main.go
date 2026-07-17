@@ -46,6 +46,17 @@ func main() {
 	cat.Put("/edit/:id", catHdl.Update)
 	cat.Delete("/delete/:id", catHdl.Delete)
 
+	memRepo := repository.NewMemberRepository()
+	memSvc := service.NewMemberService(memRepo)
+	memHdl := handler.NewMemberHandler(memSvc)
+
+	mem := app.Group("/api/member", middleware.AuthMiddleware)
+	mem.Get("/", memHdl.GetAll)
+	mem.Get("/search", memHdl.Search)
+	mem.Post("/create", memHdl.Create)
+	mem.Put("/update/:id", memHdl.Update)
+	mem.Delete("/delete/:id", memHdl.Delete)
+
 	log.Println("Server berjalan di :8080")
 	app.Listen(":8080")
 

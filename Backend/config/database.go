@@ -50,6 +50,7 @@ func ConnectDB() {
 		&models.User{},
 		&models.Product{},
 		&models.Category{},
+		&models.Member{},
 	)
 
 	DB = db
