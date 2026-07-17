@@ -36,6 +36,16 @@ func main() {
 	prod.Put("/update/:id", prodHdl.Update)
 	prod.Delete("/delete/:id", prodHdl.Delete)
 
+	catRepo := repository.NewCategoryRepository()
+	catSvc := service.NewCategoryService(catRepo)
+	catHdl := handler.NewCategoryHandler(catSvc)
+
+	cat := app.Group("/api/kategori", middleware.AuthMiddleware)
+	cat.Get("/", catHdl.GetAll)
+	cat.Post("/create", catHdl.Create)
+	cat.Put("/edit/:id", catHdl.Update)
+	cat.Delete("/delete/:id", catHdl.Delete)
+
 	log.Println("Server berjalan di :8080")
 	app.Listen(":8080")
 
