@@ -69,6 +69,12 @@ func main() {
 	trans.Put("/status/:id", transHdl.UpdateStatus)
 	trans.Delete("/delete/:id", transHdl.Delete)
 
+	reportSvc := service.NewReportService(transRepo)
+	reportHdl := handler.NewReportHandler(reportSvc)
+
+	report := app.Group("/api/laporan", middleware.AuthMiddleware)
+	report.Get("/export", reportHdl.ExportExcel)
+
 	log.Println("Server berjalan di :8080")
 	app.Listen(":8080")
 
