@@ -46,7 +46,7 @@ func ConnectDB() {
 		log.Fatal("GAgal konek ke database: ", err)
 	}
 
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Product{})
 
 	DB = db
 	fmt.Println("Database berhasil terhubunng dan migrasi selesai!")
